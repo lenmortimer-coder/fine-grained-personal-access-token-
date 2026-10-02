@@ -1,0 +1,23 @@
+# Render deployment — one-click blueprint.
+# After connecting this repo in Render: New → Blueprint → pick this repo → Apply.
+# Set ADMIN_EMAIL and ADMIN_PASSWORD in the Render dashboard (Environment tab)
+# before the first deploy so the owner account uses your chosen credentials.
+services:
+  - type: web
+    name: mentorcircle
+    runtime: node
+    plan: free
+    buildCommand: npm install --no-audit --no-fund && npm run build
+    startCommand: node server/index.js --prod
+    healthCheckPath: /api/stats
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MC_BASE_URL
+        sync: false # set to your public URL, e.g. https://mentorcircle.onrender.com
+      - key: ADMIN_EMAIL
+        sync: false # set before first deploy, e.g. you@ultimateconsulting.co.za
+      - key: ADMIN_PASSWORD
+        sync: false # set before first deploy (min 8 characters)
+      - key: SMTP_URL
+        sync: false # optional, e.g. smtp://user:pass@smtp.provider.com:587
